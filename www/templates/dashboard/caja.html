@@ -1,0 +1,305 @@
+<ion-view class="bg-koua">
+
+	<form name="formCompra" ng-submit="realizarPago();">
+
+		<ion-content class="pa-llevar">
+
+			<div ng-show="!load">
+
+				<h1 id="title">Carrito <img src="img/purple-carr.png" /></h1>
+				
+				<div class="row" id="lista-productos" ng-repeat="p in listaProductos track by $index">
+
+					<div class="col-md-4 col-xs-4 col-sm-4">
+						<div id="image" style="background-image: url({{ p.imagenes[0] }});">
+							<img src="img/eliminar.png" ng-click="eliminarProducto(p._id);"/>
+						</div>
+					</div>
+
+					<div class="col-md-8 col-xs-8 col-sm-8">
+						<div id="descripcion">
+							<p id="nombre">{{ p.nombre }}</p>
+							<p id="precio" style="font-size: 14px!important">${{ (p.precio * p.noPiezas) + p.costoEnvio }} MXN c/ envió</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="metodos-pago" ng-if="listaProductos && listaProductos.length > 0">
+					<h5>Selecciona un método de pago</h5>
+					<ion-list>
+					  	<ion-radio ng-repeat="m in listaMetodosPago" name="metodosPago" style="color: black !important"
+					  		ng-model="pedido.metodoPago" ng-value="m.identificador" ng-show="m.identificador != 4 && m.identificador != 5">
+					  		<i class="icon ion-card" ng-show="m.identificador == 1"></i>
+					  		<i class="icon ion-arrow-swap" ng-show="m.identificador == 2"></i>
+					  		<i class="icon ion-cash" ng-show="m.identificador == 3"></i>
+					  		{{m.metodo}}
+					  	</ion-radio>
+				 	</ion-list>>
+				 	<!--ion-list>
+						<ion-radio ng-repeat="m in listaMetodosPago" name="metodosPago" ng-model="pedido.metodoPago" 
+							ng-value="m.identificador">
+							<i class="icon ion-android-sync" ng-show="m.identificador == 4"></i>
+							<i class="icon ion-cash	" ng-show="m.identificador == 5"></i>
+							{{m.metodo}}
+						</ion-radio>
+					</ion-list-->
+				</div>
+
+				<div class="datos-tarjeta" ng-if="pedido.metodoPago == 1 && 
+					(!usuario.customer || !usuario.customer.id)">
+					<h5>Ingrese los datos de su tarjeta</h5>
+
+					<div class="form-group">
+						<input type="text" name="cardName" placeholder="Nombre del titular" 
+							minlength="2" maxlength="150" 
+							ng-model="tarjeta.name" class="input-text" required />
+
+						<div class="help-block" ng-messages="formCompra.cardName.$error"
+							ng-if="formCompra.cardName.$touched"
+							ng-class="{ 'text-danger': formCompra.cardName.$invalid}">
+							<div ng-messages-include="{{'templates/error.html'}}"></div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<input type="text" name="cardNumber" placeholder="Número de tarjeta de crédito" 
+							minlength="16" maxlength="18" ng-number
+							ng-model="tarjeta.number" class="input-text" required />
+
+						<div class="help-block" ng-messages="formCompra.cardNumber.$error"
+							ng-if="formCompra.cardNumber.$touched"
+							ng-class="{ 'text-danger': formCompra.cardNumber.$invalid}">
+							<div ng-messages-include="{{'templates/error.html'}}"></div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<input type="text" name="cvc" placeholder="CVC" 
+							minlength="3" maxlength="4" ng-number
+							ng-model="tarjeta.cvc" class="input-text" required />
+
+						<div class="help-block" ng-messages="formCompra.cvc.$error"
+							ng-if="formCompra.cvc.$touched"
+							ng-class="{ 'text-danger': formCompra.cvc.$invalid}">
+							<div ng-messages-include="{{'templates/error.html'}}"></div>
+						</div>
+					</div>
+
+					<div class="form-group">
+
+						<label class = "item item-input item-select">
+							<div class = "input-label">
+								Mes
+							</div>
+
+							<select name="fmes" id="fmes" ng-model="tarjeta.exp_month" required>
+								<option value="">------</option>
+								<option value="01">01</option>
+								<option value="02">02</option>
+								<option value="03">03</option>
+								<option value="04">04</option>
+								<option value="05">05</option>
+								<option value="06">06</option>
+								<option value="07">07</option>
+								<option value="08">08</option>
+								<option value="09">09</option>
+								<option value="10">10</option>
+								<option value="11">11</option>
+								<option value="12">12</option>
+							</select>
+						</label>
+
+						<div class="help-block" ng-messages="formCompra.fmes.$error"
+							ng-if="formCompra.fmes.$touched"
+							ng-class="{ 'text-danger': formCompra.fmes.$invalid}">
+							<div ng-messages-include="{{'templates/error.html'}}"></div>
+						</div>
+					</div>
+
+					<div class="form-group">
+
+						<label class = "item item-input item-select">
+							<div class = "input-label">
+								Año
+							</div>
+
+							<select name="fmes" id="fanio" ng-model="tarjeta.exp_year" required>
+								<option value="">------</option>
+								<option ng-repeat="a in anios track by $index"
+									value="{{ a }}">{{ a }}</option>
+							</select>
+						</label>
+
+						<div class="help-block" ng-messages="formCompra.fanio.$error"
+							ng-if="formCompra.fanio.$touched"
+							ng-class="{ 'text-danger': formCompra.fanio.$invalid}">
+							<div ng-messages-include="{{'templates/error.html'}}"></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="datos-tarjeta" ng-if="pedido.metodoPago == 1 && 
+					usuario.customer && usuario.customer.id">
+					
+					<p>
+						Tarjeta: {{ tarjeta.payment_sources.data[0].brand }}
+					</p>
+					
+					<p>
+						Número de tarjeta: **** **** **** {{ tarjeta.payment_sources.data[0].last4 }}
+					</p>
+
+					<p>
+						Fecha de vencimiento: {{ tarjeta.payment_sources.data[0].exp_month + '-' + tarjeta.payment_sources.data[0].exp_year }}
+					</p>
+				</div>
+
+				<div class="informacion-usuario" ng-if="listaProductos && listaProductos.length > 0">
+
+					<h5>Dirección de envío</h5>
+
+					<p ng-bind="'Email: ' + usuario.email"></p>
+					<p ng-show="usuario.direccionEnvio.telefono"
+						ng-bind="'Teléfono: ' + usuario.direccionEnvio.telefono"></p>
+					<p ng-show="usuario.direccionEnvio.calle"
+						ng-bind="'Dirección: ' + usuario.direccionEnvio.calle"></p>
+					<p ng-show="usuario.direccionEnvio.numero"
+						ng-bind="'Número: ' + usuario.direccionEnvio.numero"></p>
+					<p ng-show="usuario.direccionEnvio.codigoPostal"
+						ng-bind="'Código Postal: ' + usuario.direccionEnvio.codigoPostal"></p>
+					<p ng-show="usuario.direccionEnvio.estado"
+						ng-bind="'Estado: ' + usuario.direccionEnvio.estado"></p>
+					<p ng-show="usuario.direccionEnvio.municipio" style="margin-bottom: 40%;" 
+						ng-bind="'Municipio: ' + usuario.direccionEnvio.municipio"></p>
+					
+					<div class="form-group" ng-if="!usuario.nombreCompleto">
+						<input type="text" name="nombreCompleto" placeholder="Nombre" 
+							ng-model="pedido.usuario.nombreCompleto" minlength="2"
+							maxlength="150" class="input-text" required />
+
+						<div class="help-block" ng-messages="formCompra.nombreCompleto.$error"
+							ng-if="formCompra.nombreCompleto.$touched"
+							ng-class="{ 'text-danger': formCompra.nombreCompleto.$invalid}">
+							<div ng-messages-include="{{'templates/error.html'}}"></div>
+						</div>
+					</div>
+
+					<div class="form-group" ng-if="!usuario.apellidos">
+						<input type="text" name="apellidos" placeholder="Apellidos" 
+							ng-model="pedido.usuario.apellidos" minlength="2"
+							maxlength="150" class="input-text" required />
+
+						<div class="help-block" ng-messages="formCompra.apellidos.$error"
+							ng-if="formCompra.apellidos.$touched"
+							ng-class="{ 'text-danger': formCompra.apellidos.$invalid}">
+							<div ng-messages-include="{{'templates/error.html'}}"></div>
+						</div>
+					</div>
+
+					<div class="form-group" ng-if="!usuario.direccionEnvio.calle">
+						<input type="text" name="calle" placeholder="Dirección" 
+							ng-model="pedido.usuario.direccionEnvio.calle"
+							minlength="2" maxlength="200" class="input-text" required />
+
+						<div class="help-block" ng-messages="formCompra.calle.$error"
+							ng-if="formCompra.calle.$touched"
+							ng-class="{ 'text-danger': formCompra.calle.$invalid}">
+							<div ng-messages-include="{{'templates/error.html'}}"></div>
+						</div>
+					</div>
+					
+					<div class="form-group" ng-if="!usuario.direccionEnvio.numero">
+						<input type="text" name="numero" placeholder="Número" 
+							ng-model="pedido.usuario.direccionEnvio.numero" ng-numero
+							class="input-text" maxlength="5" minlength="1" required />
+
+						<div class="help-block" ng-messages="formCompra.numero.$error"
+							ng-if="formCompra.numero.$touched"
+							ng-class="{ 'text-danger': formCompra.numero.$invalid}">
+							<div ng-messages-include="{{'templates/error.html'}}"></div>
+						</div>
+					</div>
+
+					<div class="form-group" ng-if="!usuario.direccionEnvio.codigoPostal">
+						<input type="text" name="cp" placeholder="Código Postal" 
+							ng-model="pedido.usuario.direccionEnvio.codigoPostal" codigo-postal
+							class="input-text" minlength="5" maxlength="5" required />
+
+						<div class="help-block" ng-messages="formCompra.cp.$error"
+							ng-if="formCompra.cp.$touched"
+							ng-class="{ 'text-danger': formCompra.cp.$invalid}">
+							<div ng-messages-include="{{'templates/error.html'}}"></div>
+						</div>
+					</div>
+					
+					<div class="form-group" ng-if="!usuario.direccionEnvio.telefono">
+						<input type="text" name="telefono" placeholder="Teléfono" 
+							ng-model="pedido.usuario.direccionEnvio.telefono" minlength="10" 
+							class="input-text" maxlength="10" valid-telefono required />
+
+						<div class="help-block" ng-messages="formCompra.telefono.$error"
+							ng-if="formCompra.telefono.$touched"
+							ng-class="{ 'text-danger': formCompra.telefono.$invalid}">
+							<div ng-messages-include="{{'templates/error.html'}}"></div>
+						</div>
+					</div>
+
+					<div class="form-group" ng-if="!usuario.direccionEnvio.estado">
+
+						<label class = "item item-input item-select">
+							<div class = "input-label">
+								Estado
+							</div>
+
+							<select ng-model="pedido.usuario.direccionEnvio.estado">
+								<option value="">-------</option>
+								<option ng-repeat="e in listaEstado"
+									value="{{ e.estado }}">{{ e.estado }}</option>
+							</select>
+						</label>
+
+						<div class="help-block" ng-messages="formCompra.estado.$error"
+							ng-if="formCompra.estado.$touched"
+							ng-class="{ 'text-danger': formCompra.estado.$invalid}">
+							<div ng-messages-include="{{'templates/error.html'}}"></div>
+						</div>
+					</div>
+
+					<div class="form-group" ng-if="!usuario.direccionEnvio.municipio" style="margin-bottom: 40%;">
+						<input type="text" name="municipio" placeholder="Municipio" 
+							ng-model="pedido.usuario.direccionEnvio.municipio"
+							minlength="2" maxlength="100" class="input-text" required />
+
+						<div class="help-block" ng-messages="formCompra.municipio.$error"
+							ng-if="formCompra.municipio.$touched"
+							ng-class="{ 'text-danger': formCompra.municipio.$invalid}">
+							<div ng-messages-include="{{'templates/error.html'}}"></div>
+						</div>
+					</div>
+				</div>
+
+				<div ng-if="listaProductos.length <= 0" class="notificacion">
+					No se encontrarón productos en su carrito.
+				</div>
+			</div>
+			<br>
+		</ion-content>
+
+		<ion-footer-bar class="bar-dark producto-footer" ng-if="listaProductos && listaProductos.length > 0">
+			<div class="row">
+				<div class="col" style="padding-top: 0;">
+					<h3 style="color: black !important">
+						MX ${{ totalPagar }}
+					</h3>
+					<p style="padding-left: 3.5em;">Envío incluido</p>
+				</div>
+				<div class="col">
+					<button class="btn-comprar" type="submit"
+						>
+						Pagar
+					</button>
+				</div>
+			</div>		
+		</ion-footer-bar>
+	</form>
+</ion-view>

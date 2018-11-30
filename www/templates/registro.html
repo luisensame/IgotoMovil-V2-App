@@ -1,0 +1,50 @@
+<ion-view class="registro bg-koua" view-title="Registro" name="registro-view">
+	<ion-content class="padding backgroundGrayMonturas" scroll="false">
+		<form name="formRegistro" ng-submit="registro(formRegistro);" class="centrado-porcentual" style="width: 65%">
+
+			<div class="text-center logo">
+				<img src="img/logo.png" />
+			</div>
+
+			<div class="form-group" ng-class="{ 'has-error': formRegistro.email.$touched && formRegistro.email.$invalid && !notificaciones.success}">
+				<input class="input-text inputLogin2" type="email" placeholder="Correo Electrónico" maxlength="80" 
+					valid-email ng-model="usuario.email" name="email" tabindex="1" required>
+
+				<div class="help-block" ng-messages="formRegistro.email.$error"
+					ng-if="formRegistro.email.$touched  && !notificaciones.success"
+	                ng-class="{ 'text-danger': formRegistro.email.$invalid && !notificaciones.success}">
+	                <div ng-messages-include="{{'templates/error.html'}}"></div>
+	            </div>
+			</div>
+			
+			<div class="form-group" ng-class="{ 'has-error': formRegistro.password.$touched && formRegistro.password.$invalid && !notificaciones.success}">
+				
+				<input class="input-text inputLogin2" type="password" placeholder="Contraseña" maxlength="16" 
+					valid-password name="password" ng-model="usuario.password" required>
+
+				<div class="help-block" ng-messages="formRegistro.password.$error"
+					ng-if="formRegistro.password.$touched && !notificaciones.success"
+	                ng-class="{ 'text-danger': formRegistro.password.$invalid && !notificaciones.success}">
+	                <div ng-messages-include="{{'templates/error.html'}}"></div>
+	            </div>
+			</div>
+
+			<button class="button button-block btn" style="margin-bottom: 20px !important;color: black !important" 
+				type="submit" ng-disabled="formRegistro.$invalid || procesar">
+					Crear cuenta
+			</button>
+			<button class="button button-block btn btn-sin-registro" ng-click="goNoRegister()">
+				Continuar sin registro
+			</button>
+			<div class="text-center">
+				<a href="#/login" class="linkYaREgistrado"><span style="font-size: 10px;font-weight: initial!important;color: black">¿Ya tienes una cuenta?</span> Inicia sesión</a>
+			</div>
+		</form>
+
+
+		<!--<div class="text-center login-fb">
+			<div class="line"></div>
+			<span class="fb-click" ng-click="registroFacebook();">Iniciar sesión con Facebook</span>
+		</div>-->
+	</ion-content>
+</ion-view>

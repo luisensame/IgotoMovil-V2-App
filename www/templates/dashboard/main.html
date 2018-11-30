@@ -1,0 +1,85 @@
+<ion-view class="bg-koua main" hide-back-button="true">
+	
+	<div class="fixed-slide wrap-slide-categorias">       
+		<div class="wrap-search" ng-style="(styleBuscar) ? {display: 'inline-block'} : {display: 'none'};">
+			<form ng-submit="buscarProducto();">
+				<div class="row">
+					<div class="col col-10">
+						<button type="submit" class="button button-icon icon ion-ios-search-strong"></button>
+					</div>
+					<div class="col col-90">						
+						<input type="text" name="search" id="search" required minlength="3" maxlength="150" 
+							ng-model="palabraClave.texto" placeholder="Ingresa una palabra clave">
+					</div>
+				</div>
+			</form>
+		</div>
+    </div>
+
+	<ion-content style="background: rgb(247, 245, 245);padding: 5px;padding-bottom: 200px">
+		<div ng-show="bannerShow == true" class="banner"></div>
+		<ion-slide-box ng-show="sliderShow == true" style="height: 200px;border-radius: 6px;margin-top: 15px" on-slide-changed="slideHasChanged($index)">
+		  <ion-slide>
+		    <div class="box blue">
+		    	<img style="width: 100% ;height: 200px;border-radius: 6px;" src="img/slide4.jpg" alt="">
+		    </div>
+		  </ion-slide>
+		  <ion-slide>
+		    <div class="box yellow">
+		    	<img style="width: 100% ;height:200px;border-radius: 6px;" src="img/slide3.jpg" alt="">
+		    </div>
+		  </ion-slide>
+		  <ion-slide>
+		    <div class="box pink">
+		    	<img style="width: 100% ;height:200px;border-radius: 6px;" src="img/slide1.jpg" alt="">
+		    </div>
+		  </ion-slide>
+		  <ion-slide>
+		    <div class="box pink">
+		    	<img style="width: 100% ;height:200px;border-radius: 6px;" src="img/slide2.jpg" alt="">
+		    </div>
+		  </ion-slide>
+		</ion-slide-box>
+		
+		<div class="list card row list-productos" ng-if="!load" ng-style="productoNuevo">
+
+			<div ng-repeat="p in productos track by $index"
+				class="item item-image col col-50">
+
+				<span class="wrap-producto">
+					<a href="#/app/producto/{{ p._id }}" class="wrap-img-producto">
+						<!--implementacion de una directiva para spinner de carga mientras imagenes cargan-->
+						<img ng-src="{{p.imagenes[0]}}" alt="{{p.nombre}}" imageonload="imageLoaded(p)" ng-show="p.loaded"/>
+						<span class="wrap-spinner-image" ng-show="!p.loaded">
+							<ion-spinner icon="spiral" class="spinner-calm"></ion-spinner>
+						</span>
+					</a>
+					<a href="#/app/producto/{{ p._id }}" class="caption">
+						<h4 style="text-align: center;font-weight: bold;">{{ p.nombre }}</h4>
+						<h3><span class="koua-purple" style="font-size: 19px;"><strong>{{ p.precio | currency}}</strong></span></h3>
+						<p>{{ p.descripcion }}</p>
+					</a>
+					<span class="lateral-buttons">
+						<span class="purple-star">
+							<img src="img/favHeart.svg" style="cursor: pointer;" 
+								ng-click="agregarFavorito(p._id);" alt="Favorito" />
+						</span>						
+					</span>
+				</span>
+			</div>
+			<div ng-if="productos.length <= 0" class="notificacion">
+				No se encontrarón productos con la categoría seleccionada.
+			</div>
+		</div>
+		<br>
+		<br>
+		<br>
+		<ion-infinite-scroll on-infinite="cargarProductos();"
+			spinner="spiral" class="spinner-calm"
+			ng-if="loadProductos" distance="1%" style="margin-top: -80px!important;padding-bottom: 30px"></ion-infinite-scroll>
+
+		<ion-infinite-scroll on-infinite="cargarProductosBusqueda();"
+			spinner="spiral" class="spinner-calm"
+			ng-if="loadProductosBusqueda" distance="1%" style="margin-top: -80px!important;padding-bottom: 30px"></ion-infinite-scroll>
+	</ion-content>
+</ion-view>

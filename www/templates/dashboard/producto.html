@@ -1,0 +1,175 @@
+<ion-view class="bg-koua">
+	<ion-content class="koua-detalle">
+		
+		<div class="wrap-img">
+			<ion-slides options="slide.options" slider="slide.delegate">
+				<ion-slide-page ng-repeat="img in producto.imagenes">
+					<div class="img-producto" style="background-image: url({{ img  }}); "></div>
+				</ion-slide-page>
+			</ion-slides>
+		</div>
+
+		<div class="row">
+			<div class="col">
+				<div class="buttons-detail">
+					<ul>
+						<li ng-show="producto.piezasDisponibles > 0">
+							<img src="img/icon-bag2.svg" alt="Carrito" ng-click="agregarCarrito(false);" style="width: 85%">
+						</li>
+						<li>
+							<img src="img/favHeart.svg" style="cursor: pointer;" 
+								ng-click="agregarFavorito(p._id);" alt="Favorito" />
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="wrap-content">
+			<div class="row">				
+				<div class="col">
+					<br>
+					<div class="precioDetalleProducto">${{producto.precio}}</div>
+					<p class="nombreDetalleProducto">{{producto.nombre}}</p>
+				</div>
+				<div class="col">						
+					<p class="text-center">
+						Disponibles <span class="koua-purple">{{producto.piezasDisponibles}}</span>
+					</p>					
+				</div>
+			</div>			
+			<div class="row">
+				<div class="col">
+					<div class="separador"></div>
+					<p>Descripción:</p>
+					<p class="koua-purple" style="color: black !important">{{producto.descripcion}}</p>
+					<div class="separador"></div>					
+				</div>				
+			</div>
+			<div class="row" ng-show="listaResenia.length > 0">
+				<div class="col">
+					<h5 class="resenia">Reseñas recientes</h5>
+					<ul class="list-resenias">
+						<li ng-repeat="resenia in listaResenia | limitTo:resenia.limit track by $index">
+							<ul class="stars">
+								<li ng-repeat="c in obtenerCalificacion(resenia.calificacion) track by $index">
+									<img src="img/resenias.png" alt="resenia">
+								</li>
+							</ul>
+
+							<p class="light-gray">{{ obtenerNombre(resenia.usuario); }}</p>
+						</li>
+						<li ng-show="listaResenia.length > 2 && mostrarMasResenias">
+							<button class="button button-block btn" 
+								ng-click="resenia.limit = resenia.max; mostrarMasResenias = !mostrarMasResenias">
+								Más reseñas
+							</button>
+						</li>
+					</ul>
+					<div class="separador"></div>
+				</div>
+			</div>			
+			<div class="row" ng-if="producto.piezasDisponibles > 0">
+				<div class="col">
+					<div class="list">
+					  	<label class="item item-input item-select">
+					    	<div class="input-label">Número de piezas</div>
+						    <select ng-model="selectPiezas.noPiezas"
+						    	ng-change="notificacionPiezas($event)"
+						    	ng-options="p as p for p in producto.piezasDisponibles | rango"></select>
+					  	</label>
+					</div>				
+					<div class="separador"></div>					
+				</div>				
+			</div>
+			<div class="row">
+				<div class="col" ng-class="{'col-20': producto.colores && producto.colores.length > 0}">
+					<h5 style="margin: 0;">
+						Color: 
+						<span class="light-gray" ng-if="!producto.colores || producto.colores.length === 0">
+							Este producto no cuenta con colores.
+						</span>
+					</h5>
+				</div>
+				<div class="col" ng-if="producto.colores && producto.colores.length > 0">
+					<ul class="colores">
+						<li ng-repeat="color in producto.colores">							
+							<a ng-click="addColor(color)" ng-class="color === selectedColor ? 'active' : ''">
+								<span class="item-color" style="background-color: {{color}}"></span>
+							</a>
+						</li>
+					</ul>					
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<h5>Modelo: <span class="light-gray">{{producto.modelo || 'Sin modelo'}}</span></h5>
+					<div class="separador"></div>
+				</div>				
+			</div>
+			<div class="row">				
+				<!--caracteristicas dinamicas-->								
+				<div class="wrap-caracteristicas">
+					<div class="caracteristica" ng-repeat="caracteristica in producto.caracteristicas">
+						<h5>{{caracteristica.nombre}}</h5>
+						<ul>
+							<li ng-repeat="valor in caracteristica.valores">
+								<label class="checkbox">
+									<!--ng-value="{{valor}}" -->
+									<input id="{{valor}}" type="radio" 
+									name="{{caracteristica.nombre}}" 
+									ng-click="addCaracteristica(caracteristica.nombre, valor)">
+									{{valor}}
+								</label>								
+							</li>
+						</ul>
+						<div class="separador"></div>
+					</div>					
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<p>
+						Fecha de registro: <span class="light-gray">{{producto.fechaRegistro | date: 'dd / MM / yyyy'}}</span>
+					</p>
+					<p>
+						Costo de envío tarifa única: <span class="light-gray">${{producto.costoEnvio}}</span>
+					</p>
+				</div>
+			</div>			
+		</div>
+		<br>
+		<br>
+		<br>
+		<br>
+
+
+		<script id="notificacion_variedad.html" type="text/ng-template">
+		  <ion-popover-view class="notificacion_variedad">
+		    <ion-content class="notificacion_variedad_content">
+		    	<p class="text-center">
+		    		¡Si tus productos cuentan con características diferentes, por favor realiza compras independientes!
+		    	</p>
+	    	</ion-content>
+		  </ion-popover-view>
+		</script>
+
+	</ion-content>
+	<ion-footer-bar class="bar-dark producto-footer">
+		<div class="row" ng-show="producto.piezasDisponibles > 0">
+			<div class="col" style="padding-top: 7px;text-align: center;">
+				<h3>MX ${{(selectPiezas.noPiezas * producto.precio) + producto.costoEnvio}}</h3>
+				<p style="font-size: 16px !important">Envío incluido</p>
+			</div>
+			<div class="col">
+				<button class="btn-comprar" ng-click="agregarCarrito(true);">
+					Comprar
+				</button>
+			</div>
+		</div>		
+		<div class="row" ng-show="producto.piezasDisponibles == 0">
+			<div class="col">
+				<h4 style="color: #fff; font-family: Loved; font-size: 2.5rem;" class="text-center">Producto agotado :(</h4>
+			</div>
+		</div>
+	</ion-footer-bar>
+</ion-view>

@@ -1,0 +1,82 @@
+<ion-view class="bg-koua">
+  	<ion-content class="pa-llevar">
+  		<h1 id="title">Mis Compras</h1>
+
+	    <ul class="list">
+		  <li class="item item-toggle">
+		    <span ng-show="flagEstatusEntrega">Productos entregados</span>
+		    <span ng-show="!flagEstatusEntrega">Productos pendientes</span>
+		    <label class="toggle toggle-calm">
+		       	<input type="checkbox" ng-model="flagEstatusEntrega" ng-change="changeEvent()">
+		       	<div class="track">
+		        	<div class="handle"></div>
+		       	</div>
+		    </label>
+		  </li>
+		</ul>
+
+		<!--show message when empty list products-->
+		<div ng-if="listaPedidos <= 0" class="notificacion">
+			No se encontrarón productos
+			<span ng-show="flagEstatusEntrega"> entregados</span>
+			<span ng-show="!flagEstatusEntrega"> pendientes</span>
+		</div>
+		<a href="#app/main" class="btn-comprar returnButton" type="submit">
+					Regresar
+		</a>
+		
+		<!--lista de productos entregados/pendientes-->
+		<div id="pedidos" class="list">
+			<span ng-repeat="pedido in listaPedidos">
+				<span ng-repeat="producto in pedido.productos">
+			    	<span class="item item-thumbnail-left item-text-wrap">
+			    		<img ng-src="{{producto.imagenes[0]}}" class="img-producto">
+			    		<span class="banner-entregado" ng-show="flagEstatusEntrega">
+			    			<img src="img/entregado.svg" alt="Entregado">
+			    		</span>
+				      	<h2>{{producto.nombre}}</h2>
+				      	<p>Fecha de entrega: {{producto.fechaEntrega | date:'dd / MMMM / yyyy'}}</p>
+				      	<p id="timer">
+				      		<span ng-show="!flagEstatusEntrega">				      			
+					      		Tiempo de entrega aproximado: 
+								<span class="timer">{{producto.fechaEntrega | timerDate}}</span>
+				      		</span>
+				      		<span ng-show="flagEstatusEntrega">
+				      			Producto Entregado
+				      		</span>
+						</p>
+			    	</span>
+				    <span class="item item-divider footer-item" ng-show="!flagEstatusEntrega">
+				    	<button class="button button-small button-full button-outline button-balanced"
+				    		ng-click="selectProductoEntregado(pedido._id, producto._id, $event)">
+						  Entregado <i class="icon ion-android-checkmark-circle"></i>
+						</button>
+				    </span>
+			    </span>
+			</span>
+		</div>
+
+		<ion-infinite-scroll on-infinite="cargarPedidos()" distance="1%"
+			ng-if="paginacion.loadPedidos"></ion-infinite-scroll>
+
+		<script id="resenia_producto.html" type="text/ng-template">
+		  <ion-popover-view class="resenia_producto">
+		    <ion-content class="resenia_content">
+		    	<p class="text-center">		    		
+			    	Gracias por apoyar los productos Mexicanos, KOUA agradece tu compra. 
+		    	</p>
+		    	<p class="text-center">
+		    		¡Califícanos para seguir mejorando!
+		    	</p>
+		    	<ul class="stars">
+		    		<li><img src="img/white-star.png" alt="Star 1" ng-click="calificarProducto(1)"></li>
+		    		<li><img src="img/white-star.png" alt="Star 2" ng-click="calificarProducto(2)"></li>
+		    		<li><img src="img/white-star.png" alt="Star 3" ng-click="calificarProducto(3)"></li>
+		    		<li><img src="img/white-star.png" alt="Star 4" ng-click="calificarProducto(4)"></li>
+		    		<li><img src="img/white-star.png" alt="Star 5" ng-click="calificarProducto(5)"></li>
+		    	</ul>
+		    </ion-content>
+		  </ion-popover-view>
+		</script>
+  	</ion-content>
+</ion-view>

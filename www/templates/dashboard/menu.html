@@ -1,0 +1,191 @@
+<ion-side-menus enable-menu-with-back-views="false">
+
+	<ion-side-menu-content drag-content="false">
+		<ion-nav-bar class="bar-stable bar-custom">
+
+			<ion-nav-back-button hide-back-button="true"></ion-nav-back-button>
+
+			<ion-nav-title>
+				<a href="#app/main" class="wrap-logo" ng-click="mostrarProductos(null);">
+					<img src="img/logo.png" alt="Monturas Julissa" class="header-logo" style="max-width: 85px;margin: 0 auto;display: block;margin-top: 2px;">
+				</a>
+			</ion-nav-title>
+
+			<ion-nav-buttons side="left">
+				<button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+			</ion-nav-buttons>
+			<ion-nav-buttons side="right">
+				<button class="button search" ng-show="showBusqueda && showCloseSearch === false" ng-click="mostrarBuscador(!styleBuscar);">
+					<i class="icon ion-ios-search-strong lupa"></i>
+				</button>
+				<button class="button search" ng-show="showBusqueda && showCloseSearch === true" ng-click="mostrarBuscador(!styleBuscar);">
+					<i class="icon ion-close-circled closex"></i>
+				</button> 
+				<button class="button button-icon button-clear ion-ios-contact" style="display: block!important;padding-right: 8px!important;" menu-toggle="right" ng-show="showBusqueda"></button>
+			</ion-nav-buttons>
+		</ion-nav-bar>
+		<ion-nav-view name="menuContent"></ion-nav-view>
+	</ion-side-menu-content>
+
+	<ion-side-menu side="left">
+<!-- <ion-header-bar class="bar-stable" style="box-shadow: inset -31px 0px 22px -24px rgba(41,41,41,0.45)!important;">
+<h1 class="title">Menú</h1>
+</ion-header-bar> -->
+<ion-content>
+	<ion-list style="box-shadow: inset -31px 0px 22px -24px rgba(41,41,41,0.45)!important; border-bottom: solid 1px red!important;">
+		<div class="row">
+			<div class="col-15">
+				<img style="width: 26px;margin-top: 19px; margin-left: 8px;" src="img/categorias.svg" alt="">
+			</div>
+			<div class="col-85">
+				<i class="fa-fa-angular"></i><h1 class="dd" style="color: #001a32;margin-left: 20px">Categorías</h1>
+			</div>
+		</div>
+		<ul>
+			<li class="menuLeftCat" style="box-shadow: inset -31px 0px 22px -24px rgba(41,41,41,0.45)!important;">
+				<div ng-class="{'active-categoria': categoria == '1'}">
+					<!--
+					<ion-item class="item-stable item-icon-right menuDropdown" ng-click="toggleGroup(1)" style="text-align: left;">
+                        <i class="icon" ng-class="isGroupShown(1) ? 'ion-arrow-up-b' : 'ion-arrow-down-b'" style="font-size: 1.3em;color: #b8b8b8"></i>
+                        &nbsp;
+                        Sneakers
+                    </ion-item>
+                    <div class="item-accordion" ng-show="isGroupShown(1)" style="width: 12em">
+                    	<ul>
+                    		<li class="menuLeftCat" style="padding: initial;padding-left: 10px">
+								<div ng-class="{'active-categoria': categoria == cat._id}">
+									<a class="categoriaLeft" ng-click="showListHombres()">
+										<i class="icon" ng-class="showHombresList ? 'ion-arrow-up-b' : 'ion-arrow-down-b'" style="font-size: 1.3em;color: #b8b8b8;margin-top: 15px;float: right;"></i>
+										&nbsp;
+										<p class="dditem">Hombres</p>
+									</a>
+									<ul ng-show="showHombresList == true">
+										<li class="menuLeftCat" menu-close  ng-repeat="cat in catalogoCategorias" ng-if="cat.genero == 'hombre'">
+											<div ng-class="{'active-categoria': categoria == cat._id}">
+												<a class="categoriaLeft" href="#" ng-click="mostrarProductos(cat._id);">
+													<p class="dditem">{{cat.titulo}}</p>
+												</a>
+											</div>
+										</li>
+									</ul>
+								</div>
+							</li>
+							<li class="menuLeftCat" style="padding: initial;padding-left: 10px">
+								<div ng-class="{'active-categoria': categoria == cat2._id}">
+									<a class="categoriaLeft" ng-click="showListMujeres()">
+										<i class="icon" ng-class="showMujeresList ? 'ion-arrow-up-b' : 'ion-arrow-down-b'" style="font-size: 1.3em;color: #b8b8b8;margin-top: 15px;float: right;"></i>
+										&nbsp;
+										<p class="dditem">Mujeres</p>
+									</a>
+									<ul ng-show="showMujeresList == true">
+										<li class="menuLeftCat" menu-close ng-repeat="cat2 in catalogoCategorias" ng-if="cat2.genero == 'mujer'">
+											<div ng-class="{'active-categoria': categoria == cat2._id}">
+												<a class="categoriaLeft" href="#" ng-click="mostrarProductos(cat2._id);">
+													<p class="dditem">{{cat2.titulo}}</p>
+												</a>
+											</div>
+										</li>
+									</ul>
+								</div>
+							</li>
+                    	</ul>
+                    </div>
+                -->
+					<!--a class="categoriaLeft" ng-click="mostrarProductos('1');" ng-click="toggleGroup(1)">
+						<i class="icon" ng-class="isGroupShown(1) ? 'ion-arrow-down-b' : 'ion-arrow-down-b'"></i>
+                        &nbsp;
+						<p class="dditem">Sneakers</p>
+					</a-->
+				</div>
+			</li>
+			<li class="menuLeftCat" menu-close style="box-shadow: inset -31px 0px 22px -24px rgba(41,41,41,0.45)!important;" ng-repeat="cat3 in catalogoCategorias" ng-if="cat3.genero == 'ambos'">
+				<div ng-class="{'active-categoria': categoria == cat3._id}">
+					<a class="categoriaLeft" href="#" ng-click="mostrarProductos(cat3._id);">
+						<p class="dditem">{{cat3.titulo}}</p>
+					</a>
+				</div>
+			</li>
+			<li class="menuLeftCat" menu-close style="box-shadow: inset -31px 0px 22px -24px rgba(41,41,41,0.45)!important;">
+				<div ng-class="{'active-categoria': categoria == '1'}">
+					<a class="categoriaLeft" href="#" ng-click="mostrarProductos('1');">
+						<p class="dditem">Destacados</p>
+						<ion-icon name="arrow-forward"></ion-icon>
+					</a>
+				</div>
+			</li>
+			<li class="menuLeftCat" menu-close style="box-shadow: inset -31px 0px 22px -24px rgba(41,41,41,0.45)!important;">
+				<div ng-class="{'active-categoria': categoria == '3'}">
+					<a class="categoriaLeft" href="#" ng-click="mostrarProductos('3');">
+						<p class="dditem">Búsquedas</p>
+					</a>
+				</div>
+			</li>
+			<li class="menuLeftCat" menu-close style="box-shadow: inset -31px 0px 22px -24px rgba(41,41,41,0.45)!important;" ng-repeat="cat2 in catalogoCategorias">
+				<div ng-class="{'active-categoria': categoria == cat2._id}">
+					<a class="categoriaLeft" href="#" ng-click="mostrarProductos(cat2._id);">
+						<p class="dditem">{{cat2.categoria}}</p>
+					</a>
+				</div>
+			</li>
+		</ul>
+<!--<ion-item class="item-custom" menu-close href="#app/mis-compras">
+Mis Compras
+</ion-item>-->
+<!--<ion-item class="item-custom" ng-click="compartir();" menu-close href="#">
+Comparte con tus amigos
+</ion-item>-->
+<br>
+
+</ion-list>
+<div>
+	<a class="item item-icon-left" href="#app/contacto" menu-close style="box-shadow: inset -31px 0px 22px -24px rgba(41,41,41,0.45);background: #f7f7f7; padding-left: 60px;">
+		<i class="icon ion-chatbubble-working" style="color: #001a32;padding-right: 50px;"></i>
+		Contacto
+	</a>
+	<!-- <a class="item item-icon-left" href="#app/politicas-privacidad" menu-close style="box-shadow: inset -31px 0px 22px -24px rgba(41,41,41,0.45);background: #f7f7f7; padding-left: 60px;">
+		<i class="icon ion-document-text" style="color: #001a32;padding-right: 50px;"></i>
+		Políticas de privacidad 
+	</a> -->
+</div>
+</ion-content>
+</ion-side-menu>
+<ion-side-menu side="right">
+	<ion-content>
+		<ion-list>
+			<ion-item style="box-shadow: inset 28px 0px 22px -24px rgba(41,41,41,0.45);border-color:transparent; background: #0f83c6; color: white!important; height: 90px;top: -1px;">
+
+			</ion-item>
+			<ion-item class="bg-perfil avatar" menu-close href="#app/perfil" ng-show="logeado == true" style="margin-top: -100px;background-color: transparent!important; border-color:transparent; height: 250px;" ng-show="usuario">
+				<div class="avatarImg" style="background-image: url({{ usuario.imagen }});border: solid 10px white;"></div>
+				<div class="usuarioNombre" style="width: 100%;margin: 0 auto">
+					<span><strong>¡Hola {{ usuario.nombreCompleto }}!</strong></span><br>
+					<span style="font-size: 12px;color: #00000082;">{{ usuario.email }}</span>
+				</div>
+			</ion-item>
+			
+			<!--ion-item class="bg-perfil avatar"  ng-show="logeado == false" style="background-color: transparent;padding: 25px;border: none !important;">
+				
+			</ion-item-->
+			<ion-item class="bg-perfil avatar" ng-show="logeado == false" style="background-color: transparent;padding: 8px;border: none !important;text-align: center; color: #0f83c6">
+				¡Hola registrate en nuestra app!<br>
+			</ion-item>
+			<ion-item ng-if="logeado == false" style="background-color: transparent;padding: 25px;border: none !important;text-align: center;" >
+				<a menu-close href="#/registro" style="text-decoration: none;color: #0f83c6;border: solid 1px #0f83c6;padding: 12px 65px;border-radius: 5px;">
+					Registrarme
+				</a>
+			</ion-item>
+		</ion-list>
+		<!-- <ion-item class="item-custom favoritos" style="box-shadow: inset 28px 0px 22px -24px rgba(41,41,41,0.45)!important;" menu-close href="#app/favoritos">
+			<span class="text">
+				Favoritos <img src="img/estrella_favoritos.png">
+			</span>
+			<span class="count favdefavs">{{ totalFavoritos }}</span>
+		</ion-item -->
+	</ion-content>
+</ion-side-menu>
+</ion-side-menus>
+<div class="tabs tabs-icon-only footerMenu">
+	<a href="#app/main" class="tab-item button homeIcon active" ng-click="mostrarProductos(null);"></a>
+	<a href="#app/caja" class="tab-item button carrito active"></a>
+	<a href="#app/favoritos" class="tab-item button favoritos active" ng-show="logeado == true"></a>  
+</div>

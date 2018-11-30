@@ -1,0 +1,38 @@
+<ion-view class="bg-koua">
+  	<ion-content class="koua-favoritos">
+
+  		<div class="list card row list-productos" ng-if="!load">
+
+			<div href="#" ng-repeat="f in favoritos track by $index"
+				class="item item-image col col-50">
+
+				<div class="eliminar-favorito" ng-click="eliminarFavorito(f);"></div>
+
+				<span class="wrap-producto">
+					
+					<a href="#/app/producto/{{ f.producto._id }}">
+						<img ng-src="{{f.producto.imagenes[0]}}" alt="Shoes" />
+					</a>
+					
+					<span class="caption">
+						<h4>{{ f.producto.nombre }} <span class="pull-right koua-purple">${{ f.producto.precio }}</span></h4>
+						<p>{{ f.producto.descripcion }}</p>
+					</span>
+				</span>
+			</div>
+
+			<div ng-if="favoritos.length <= 0" class="notificacion">
+				No se encontrarón productos como favoritos.
+			</div>
+			<a href="#app/main" class="wrap-logo" ng-click="mostrarProductos(null);">
+				<!-- <img src="img/logoCI.png" alt="Kouax" class="header-logo"> -->
+			</a>
+			<div class="row" style="margin: 0 auto;width: 100%" ng-if="favoritos.length <= 0">
+
+			</div>
+		</div>
+		
+  		<ion-infinite-scroll on-infinite="cargarProductos();"
+			ng-if="loadProductos" distance="1%"></ion-infinite-scroll>
+  	</ion-content>
+</ion-view>
